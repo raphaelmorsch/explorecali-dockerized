@@ -5,11 +5,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-/**
- * Data Transfer Object for Rating a Tour.
- *
- * Created by Mary Ellen Bowman
- */
 public class RatingDto {
 
     @Min(0)
