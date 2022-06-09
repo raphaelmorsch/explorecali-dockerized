@@ -13,12 +13,15 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.OptionalDouble;
 
+import javax.transaction.Transactional;
+
 /**
  * Tour Rating Service
  *
  * Created by Mary Ellen Bowman.
  */
 @Service
+@Transactional
 public class TourRatingService {
     private TourRatingRepository tourRatingRepository;
     private TourRepository tourRepository;
