@@ -1,19 +1,33 @@
 package com.example.ec.web;
 
-import com.example.ec.domain.TourRating;
-import com.example.ec.service.TourRatingService;
+import java.util.AbstractMap;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.AbstractMap;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+import com.example.ec.domain.TourRating;
+import com.example.ec.service.TourRatingService;
 
 /**
  * Tour Rating Controller
@@ -23,6 +37,9 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping(path = "/tours/{tourId}/ratings")
 public class TourRatingController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(TourRatingController.class);
+
     private TourRatingService tourRatingService;
 
     @Autowired
@@ -42,7 +59,8 @@ public class TourRatingController {
      */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTourRating(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated RatingDto ratingDto) {
+    public void createTourRating(@PathVariable(value = "tourId") int tourId,
+            @RequestBody @Validated RatingDto ratingDto) {
         tourRatingService.createNew(tourId, ratingDto.getCustomerId(), ratingDto.getScore(), ratingDto.getComment());
     }
 
@@ -56,12 +74,14 @@ public class TourRatingController {
     @PostMapping("/{score}")
     @ResponseStatus(HttpStatus.CREATED)
     public void createManyTourRatings(@PathVariable(value = "tourId") int tourId,
-                                      @PathVariable(value = "score") int score,
-                                      @RequestParam("customers") Integer customers[]) {
+            @PathVariable(value = "score") int score,
+            @RequestParam("customers") Integer customers[]) {
+
+        LOGGER.info("POST /tours/{}/ratings/{}", tourId, score);
         tourRatingService.rateMany(tourId, score, customers);
     }
 
-     /**
+    /**
      * Lookup a the Ratings for a tour.
      *
      * @param tourId
@@ -95,10 +115,12 @@ public class TourRatingController {
      * @return The modified Rating DTO.
      */
     @PutMapping
-    public RatingDto updateWithPut(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated RatingDto ratingDto) {
-         return toDto(tourRatingService.update(tourId, ratingDto.getCustomerId(),
-                 ratingDto.getScore(), ratingDto.getComment()));
+    public RatingDto updateWithPut(@PathVariable(value = "tourId") int tourId,
+            @RequestBody @Validated RatingDto ratingDto) {
+        return toDto(tourRatingService.update(tourId, ratingDto.getCustomerId(),
+                ratingDto.getScore(), ratingDto.getComment()));
     }
+
     /**
      * Update score or comment of a Tour Rating
      *
@@ -107,9 +129,10 @@ public class TourRatingController {
      * @return The modified Rating DTO.
      */
     @PatchMapping
-    public RatingDto updateWithPatch(@PathVariable(value = "tourId") int tourId, @RequestBody @Validated RatingDto ratingDto) {
-         return toDto(tourRatingService.updateSome(tourId, ratingDto.getCustomerId(),
-                 ratingDto.getScore(), ratingDto.getComment()));
+    public RatingDto updateWithPatch(@PathVariable(value = "tourId") int tourId,
+            @RequestBody @Validated RatingDto ratingDto) {
+        return toDto(tourRatingService.updateSome(tourId, ratingDto.getCustomerId(),
+                ratingDto.getScore(), ratingDto.getComment()));
     }
 
     /**
@@ -142,6 +165,7 @@ public class TourRatingController {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(NoSuchElementException.class)
     public String return400(NoSuchElementException ex) {
+        LOGGER.error("Unable to complete transaction", ex);
         return ex.getMessage();
 
     }
