@@ -1,12 +1,12 @@
-package com.example.ec;
+package com.example.ec.service;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.hamcrest.CoreMatchers.is;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -25,7 +25,6 @@ import com.example.ec.domain.Tour;
 import com.example.ec.domain.TourRating;
 import com.example.ec.repo.TourRatingRepository;
 import com.example.ec.repo.TourRepository;
-import com.example.ec.service.TourRatingService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TourRatingServiceTest {

@@ -5,7 +5,9 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-public class RatingDto {
+import org.springframework.hateoas.RepresentationModel;
+
+public class RatingDto extends RepresentationModel<RatingDto> {
 
     @Min(0)
     @Max(5)
@@ -54,6 +56,43 @@ public class RatingDto {
 
     public void setCustomerId(Integer customerId) {
         this.customerId = customerId;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + ((comment == null) ? 0 : comment.hashCode());
+        result = prime * result + ((customerId == null) ? 0 : customerId.hashCode());
+        result = prime * result + ((score == null) ? 0 : score.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (!super.equals(obj))
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        RatingDto other = (RatingDto) obj;
+        if (comment == null) {
+            if (other.comment != null)
+                return false;
+        } else if (!comment.equals(other.comment))
+            return false;
+        if (customerId == null) {
+            if (other.customerId != null)
+                return false;
+        } else if (!customerId.equals(other.customerId))
+            return false;
+        if (score == null) {
+            if (other.score != null)
+                return false;
+        } else if (!score.equals(other.score))
+            return false;
+        return true;
     }
 
 }

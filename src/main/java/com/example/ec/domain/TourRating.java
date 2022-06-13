@@ -121,4 +121,8 @@ public class TourRating {
     public int hashCode() {
         return Objects.hash(id, tour, customerId, score, comment);
     }
+
+    public Integer getId() {
+        return null;
+    }
 }

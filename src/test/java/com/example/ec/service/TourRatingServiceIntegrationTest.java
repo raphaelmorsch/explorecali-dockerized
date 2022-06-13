@@ -1,4 +1,4 @@
-package com.example.ec;
+package com.example.ec.service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
