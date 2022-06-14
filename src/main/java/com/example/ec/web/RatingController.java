@@ -1,9 +1,16 @@
 package com.example.ec.web;
 
 import com.example.ec.service.TourRatingService;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Feature;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +25,9 @@ import java.util.NoSuchElementException;
 @RequestMapping(path = "/ratings")
 public class RatingController {
     private static final Logger LOGGER = LoggerFactory.getLogger(RatingController.class);
+    
+    @JsonFormat(with = Feature.ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+    private static final TypeReference<CollectionModel<RatingDto>> myTypedList = new TypeReference<CollectionModel<RatingDto>>(){};
     private TourRatingService tourRatingService;
 
     private RatingAssembler assembler;
@@ -29,9 +39,10 @@ public class RatingController {
     }
 
     @GetMapping
-    public List<RatingDto> getAll() {
+    public CollectionModel<RatingDto> getAll() throws JsonProcessingException {
         LOGGER.info("GET /ratings");
-        return assembler.toModels(tourRatingService.lookupAll());
+
+        return assembler.toCollectionModel(tourRatingService.lookupAll());
     }
 
     @GetMapping("/{id}")

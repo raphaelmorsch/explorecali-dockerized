@@ -1,23 +1,20 @@
 package com.example.ec.web;
 
-import com.example.ec.domain.TourRating;
-import com.example.ec.repo.TourRepository;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.springframework.data.rest.webmvc.support.RepositoryEntityLinks;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Component;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-import java.util.Collections;
-import java.util.List;
+import com.example.ec.domain.TourRating;
+import com.example.ec.repo.TourRepository;
 
 /**
  * Rating Assembler, convert TourRating to a Hateoas Supported Rating class
  *
- * Created by maryellenbowman.
  */
 @Component
 public class RatingAssembler extends RepresentationModelAssemblerSupport<TourRating,RatingDto> {
@@ -49,13 +46,6 @@ public class RatingAssembler extends RepresentationModelAssemblerSupport<TourRat
        rating.add(tourLink.withRel("tour"));
        return rating;
     }
-
-    public List<RatingDto> toModels(List<TourRating> tourRatings) {
-
-        List<RatingDto> ratingDtos = Collections.emptyList();
-        tourRatings.forEach(tr -> ratingDtos.add(new RatingDto(tr.getScore(), tr.getComment(), tr.getCustomerId())));
-
-        return ratingDtos;
-    }
+    
 
 }
